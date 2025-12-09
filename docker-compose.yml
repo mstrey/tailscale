@@ -1,0 +1,30 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: ${TAILSCALE_NAME}
+    hostname: ${TAILSCALE_NAME}
+    restart: unless-stopped
+    network_mode: host
+    cpus: 1
+    environment:
+      TERM: xterm
+      TZ: America/Sao_Paulo
+      TS_HOSTNAME: ${TAILSCALE_NAME}
+      TS_ENABLE_HEALTH_CHECK: true # habilita /healthz
+      TS_ENABLE_METRICS: true # habilita /metrics
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_EXTRA_ARGS: --advertise-exit-node
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - .docker/ts/conf:/config
+      - .docker/ts/lib:/var/lib
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    healthcheck:
+      test: rm -f healthz 2>&-; wget http://localhost:9002/healthz -q; [[ $(grep -e '^ok$' healthz) ]] || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 5
