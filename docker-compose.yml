@@ -9,6 +9,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
+          memory: 256M
     environment:
       TERM: xterm
       TZ: America/Sao_Paulo
