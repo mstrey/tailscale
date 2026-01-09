@@ -5,7 +5,10 @@ services:
     hostname: ${TAILSCALE_NAME}
     restart: unless-stopped
     network_mode: host
-    cpus: 1
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
     environment:
       TERM: xterm
       TZ: America/Sao_Paulo
