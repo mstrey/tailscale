@@ -1,0 +1,5 @@
+.env
+.idea/
+.idea/*
+.docker/ts/lib/*
+.docker/ts/conf/*
